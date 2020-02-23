@@ -560,7 +560,7 @@ h1, h2, h3 {
 .delivery_time_list {
 	display: flex;
 	flex-direction: row;
-	justify-content: space-between;
+	justify-content: space-around;
 }
 
 .delivery_time_list .delivery_time_item {

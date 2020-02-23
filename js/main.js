@@ -3,6 +3,10 @@ var mobileWith = 420;
 Inputmask({"mask": "+7 (999) 999-99-99"}).mask("[name='customer_phone']");
 var minInputLenth = 3;  // the minimum length for entering a name and address
 var maxBottleCount = 999;
+var timeArr = {
+	weekdays: ['10:00 - 11:00', '12:00 - 13:00', '15:00 - 16:00'],
+	weekend: ['12:00 - 13:00', '15:00 - 16:00']
+};
 /* ---------------------------------------------------------------- */
 
 // Content
@@ -154,6 +158,7 @@ var orderData = {};
 		});
 
 		curVolumeVariant.classList.toggle("active_slide");
+		setDelivInterval(timeArr);
 		getOrderData();
 
 	}, false);
@@ -197,7 +202,7 @@ var orderData = {};
 	}
 
 	n =  new Date();
-    var sliderItems = document.querySelectorAll('.tiny-slide');
+    var sliderItems = elmByQueryAll('.tiny-slide');
     for (var i = 0; i < sliderItems.length; i++) {
     	if(i != 0) n = n.addDays(1);
 
@@ -217,7 +222,7 @@ var orderData = {};
         	sliderItems[i].querySelector('.week_value').style.color = '#9CAEDD';
         }
     };
-    
+
     // Date slider
 	var slider = tns({
 		container: '.slider-wrapper',
@@ -237,6 +242,7 @@ var orderData = {};
 		}
 	});
 
+	setDelivInterval(timeArr);
 	calcPrice();
 	getOrderData();
 
@@ -305,6 +311,28 @@ function getOrderData(){
 	};
 }
 
+function setDelivInterval(arr){
+	let timeArr;
+	if(elmByQuery('.active_slide .week_value').innerText == 'сб' ||  elmByQuery('.active_slide .week_value').innerText == 'вс') {
+		timeArr = arr.weekend;
+	} else {
+		timeArr = arr.weekdays;
+	}
+
+	var wrapper = document.createElement('div');
+	wrapper.classList.add('delivery_time_list');
+
+	for (var i = 0; i < timeArr.length; i++) {
+		var item = document.createElement("div");
+		item.classList.add('delivery_time_item');
+		if(i == 0) item.classList.add('active_time');
+		item.innerText =  timeArr[i];
+		wrapper.append(item);
+	};
+
+	elmByQuery('.delivery_time_list').replaceWith(wrapper);
+}
+
 function clearAllUserFields(){
 	elmByQuery('[name="customer_name"]').value = '';
 	elmByQuery('[name="customer_mail"]').value = '';
@@ -336,6 +364,10 @@ function setInner(elem, innerText) {
 
 function elmByQuery(query){
 	return document.querySelector(query);
+}
+
+function elmByQueryAll(query){
+	return document.querySelectorAll(query);
 }
 
 function elmByClass(class_name){
